@@ -56,9 +56,10 @@ public class UserService {
                 userNew.setPermanentAddress(oneIdUserInfo.getPerAdr());
                 userNew.setGivenDate(oneIdUserInfo.getPportIssueDate());
                 userNew.setBirthDate(oneIdUserInfo.getBirthDate());
+                userNew.setPhoneNumber(oneIdUserInfo.getMobPhoneNo());
                 userNew.setCitizenship(oneIdUserInfo.getCtzn());
                 userNew.setNationality(oneIdUserInfo.getNatn());
-                Role role = roleRepository.findByName(DefaultRole.ROLE_MODERATOR.getMessage()).get();
+                Role role = roleRepository.findByName(DefaultRole.ROLE_ADMIN.getMessage()).get();
                 userNew.setRole(role);
                 userNew.setPassword(passwordEncoder.encode(userNew.getPinfl() + userNew.getSerialAndNumber()));
                 userRepository.save(userNew);

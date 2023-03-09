@@ -1,11 +1,14 @@
 package uz.edu.ai.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uz.edu.ai.constants.ResponseMessage;
@@ -25,12 +28,16 @@ public class AdminController {
     private final NewsService newsService;
 
     @PostMapping("createNews")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> createNews(@RequestBody NewsRequest request) {
         Result result = newsService.createNews(request);
         return ResponseEntity.status(result.getStatus() ? 201 : 400).body(result);
     }
 
     @PostMapping("updateNews/{newsId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> updateNews(@PathVariable Integer newsId, @RequestBody NewsRequest request) {
         Result result = newsService.updateNews(newsId, request);
         return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
@@ -48,12 +55,16 @@ public class AdminController {
     }
 
     @DeleteMapping("{newsId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> deleteNews(@PathVariable Integer newsId) {
         Result result = newsService.deleteNews(newsId);
         return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
     }
 
     @PostMapping(value = "createDocument", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> createDocument(@RequestParam("files") List<MultipartFile> files,
                                             @RequestParam("newsId") Integer newsId) {
         Result offer = documentService.upload(files, newsId);
