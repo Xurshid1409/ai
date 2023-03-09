@@ -1,0 +1,46 @@
+server:
+  port: 8083
+  ssl:
+    enabled: true
+    key-alias: selfsigned
+    key-store: classpath:keystore.jks
+    key-store-type: PKCS12
+    key-password: changeit
+    key-store-password: changeit
+  servlet:
+    context-path: /
+#  forward-headers-strategy: native
+#  tomcat:
+#    redirect-context-root: false
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ai
+    username: postgres
+    password: 2030306
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  main:
+    banner-mode: off
+    allow-bean-definition-overriding: true
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+file:
+  storage:
+    location: /home/software/ai/fileStorage/
+jwt:
+  secret: '[0-9.a-zA-z_]^+$TutorAcademy9891212skidU3AkjdfdkfdkfdASQrFbsMrXh^56409nPgGfd528482'
