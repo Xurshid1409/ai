@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.edu.ai.domain.News;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class NewsResponse {
     private String textUZ;
     private String textRU;
     private String textEN;
+    private String createdDate;
     List<DocumentResponse> documentResponses = new ArrayList<>();
 
     public NewsResponse(News news) {
@@ -32,6 +32,7 @@ public class NewsResponse {
         this.textUZ = news.getTextUZ();
         this.textRU = news.getTextRU();
         this.textEN = news.getTextEN();
+        this.createdDate = news.getCreatedDate().toString();
     }
     public NewsResponse(News news, List<DocumentResponse> documentResponses) {
         this.id = news.getId();
@@ -41,6 +42,7 @@ public class NewsResponse {
         this.textUZ = news.getTextUZ();
         this.textRU = news.getTextRU();
         this.textEN = news.getTextEN();
+        this.createdDate = news.getCreatedDate().toString();
         this.documentResponses = documentResponses;
     }
 }
