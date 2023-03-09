@@ -47,6 +47,12 @@ public class AdminController {
         return ResponseEntity.ok(newsService.getNews(page, size));
     }
 
+    @DeleteMapping("{newsId}")
+    public ResponseEntity<?> deleteNews(@PathVariable Integer newsId) {
+        Result result = newsService.deleteNews(newsId);
+        return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
+    }
+
     @PostMapping(value = "createDocument", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createDocument(@RequestParam("files") List<MultipartFile> files,
                                             @RequestParam("newsId") Integer newsId) {

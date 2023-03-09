@@ -15,8 +15,11 @@ import lombok.Setter;
 public class Document extends AbstractEntity {
 
 
-    @Column(length = 2048)
+    @Column(length = 4096)
     private String fileUrl;
+
+    @Column(length = 2048)
+    private String fileName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     public News news;

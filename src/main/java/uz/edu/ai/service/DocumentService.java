@@ -17,6 +17,7 @@ import uz.edu.ai.model.Result;
 import uz.edu.ai.repository.DocumentRepository;
 import uz.edu.ai.repository.NewsRepository;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,6 +52,7 @@ public class DocumentService {
                     Document document = new Document();
                     document.setNews(news);
                     document.setFileUrl(currentUrl);
+                    document.setFileName(fileName);
                     documents.add(document);
                 } catch (Exception e) {
                     throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
@@ -74,6 +76,23 @@ public class DocumentService {
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException("Error: " + e.getMessage());
+        }
+    }
+
+    public void deleteFile(String filename) {
+        try {
+            File file = new File(location + "/" + filename);
+            file.delete();
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error deleted: " + e.getMessage());
+        }
+    }
+
+    public void deleteDocuments(List<Document> documents) {
+        try {
+           documentRepository.deleteAll(documents);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error deleted: " + e.getMessage());
         }
     }
 

@@ -22,7 +22,7 @@ public class NewsResponse {
     private String textUZ;
     private String textRU;
     private String textEN;
-    List<String> fileUrls = new ArrayList<>();
+    List<DocumentResponse> documentResponses = new ArrayList<>();
 
     public NewsResponse(News news) {
         this.id = news.getId();
@@ -33,7 +33,7 @@ public class NewsResponse {
         this.textRU = news.getTextRU();
         this.textEN = news.getTextEN();
     }
-    public NewsResponse(News news, List<String> fileUrls) {
+    public NewsResponse(News news, List<DocumentResponse> documentResponses) {
         this.id = news.getId();
         this.titleUZ = news.getTitleUZ();
         this.titleRU = news.getTitleRU();
@@ -41,6 +41,6 @@ public class NewsResponse {
         this.textUZ = news.getTextUZ();
         this.textRU = news.getTextRU();
         this.textEN = news.getTextEN();
-        this.fileUrls = fileUrls;
+        this.documentResponses = documentResponses;
     }
 }

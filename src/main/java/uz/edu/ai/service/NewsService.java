@@ -8,10 +8,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.edu.ai.constants.ResponseMessage;
-import uz.edu.ai.domain.Document;
 import uz.edu.ai.domain.News;
 import uz.edu.ai.model.Result;
 import uz.edu.ai.model.request.NewsRequest;
+import uz.edu.ai.model.response.DocumentResponse;
 import uz.edu.ai.model.response.NewsResponse;
 import uz.edu.ai.repository.NewsRepository;
 import java.util.List;
@@ -22,6 +22,7 @@ import java.util.Optional;
 public class NewsService {
 
     private final NewsRepository newsRepository;
+    private final DocumentService documentService;
 
     @Transactional
     public Result createNews(NewsRequest request) {
@@ -34,7 +35,7 @@ public class NewsService {
             news.setTextRU(request.getTextRU());
             news.setTextEN(request.getTextEN());
             newsRepository.save(news);
-            return new Result(ResponseMessage.SUCCESSFULLY_SAVED.getMessage(), true);
+            return new Result(ResponseMessage.SUCCESSFULLY_SAVED.getMessage(), true, news.getId());
         } catch (Exception e) {
             return new Result(ResponseMessage.ERROR_SAVED.getMessage(), false);
         }
@@ -59,8 +60,8 @@ public class NewsService {
     @Transactional(readOnly = true)
     public Optional<NewsResponse> getNewsById(Integer newsId) {
         Optional<News> news = newsRepository.findById(newsId);
-        List<String> fileUrls = news.get().getDocuments().stream().map(Document::getFileUrl).toList();
-        return Optional.of(new NewsResponse(news.get(), fileUrls));
+        List<DocumentResponse> documentResponses = news.get().getDocuments().stream().map(DocumentResponse::new).toList();
+        return Optional.of(new NewsResponse(news.get(), documentResponses));
     }
 
     @Transactional(readOnly = true)
@@ -70,4 +71,18 @@ public class NewsService {
         return newsRepository.findAll(pageable).map(NewsResponse::new);
     }
 
+    @Transactional
+    public Result deleteNews(Integer newsId) {
+        News news = newsRepository.findById(newsId).get();
+        try {
+            news.getDocuments().forEach(d -> {
+                documentService.deleteFile(d.getFileName());
+            });
+            documentService.deleteDocuments(news.getDocuments());
+            newsRepository.delete(news);
+            return new Result(ResponseMessage.SUCCESSFULLY_DELETED.getMessage(), true);
+        } catch (Exception e) {
+            return new Result(ResponseMessage.ERROR_DELETED.getMessage(), false);
+        }
+    }
 }
