@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Table(name = "news")
 @Getter
 @Setter
@@ -31,5 +33,8 @@ public class News extends AbstractEntity {
 
     @Column(length = 8192)
     private String textEN;
+
+    @OneToMany(mappedBy = "news")
+    private List<Document> documents;
 
 }

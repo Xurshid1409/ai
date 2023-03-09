@@ -20,5 +20,4 @@ public class Document extends AbstractEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     public News news;
-
 }

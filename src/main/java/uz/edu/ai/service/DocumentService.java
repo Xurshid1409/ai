@@ -16,10 +16,13 @@ import uz.edu.ai.domain.News;
 import uz.edu.ai.model.Result;
 import uz.edu.ai.repository.DocumentRepository;
 import uz.edu.ai.repository.NewsRepository;
+
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -33,11 +36,11 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
 
     @Transactional
-    public Result upload(MultipartFile file, Integer newsId) {
-
+    public Result upload(List<MultipartFile> files, Integer newsId) {
         News news = newsRepository.findById(newsId).get();
-
-        if (!file.isEmpty()) {
+        List<Document> documents = new ArrayList<>();
+        try {
+            files.forEach(file -> {
                 String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
                 Integer name = ThreadLocalRandom.current().nextInt(99999999, 1000000000);
                 String s = FilenameUtils.getExtension(fileName);
@@ -48,13 +51,16 @@ public class DocumentService {
                     Document document = new Document();
                     document.setNews(news);
                     document.setFileUrl(currentUrl);
-                    documentRepository.save(document);
-                    return new Result(ResponseMessage.SUCCESSFULLY.getMessage(), true);
+                    documents.add(document);
                 } catch (Exception e) {
                     throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
                 }
+            });
+            documentRepository.saveAll(documents);
+            return new Result(ResponseMessage.SUCCESSFULLY.getMessage(), true);
+        } catch (Exception e) {
+            return new Result(ResponseMessage.ERROR.getMessage(), false);
         }
-        return new Result(ResponseMessage.ERROR.getMessage(), false);
     }
 
     public Resource download(String filename) {
@@ -72,7 +78,7 @@ public class DocumentService {
     }
 
     private String getCurrentUrl(String fileName) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/news/download/").path(fileName).toUriString();
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/admin/download/").path(fileName).toUriString();
     }
 }
 
