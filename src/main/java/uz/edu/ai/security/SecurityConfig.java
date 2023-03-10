@@ -32,7 +32,7 @@ public class SecurityConfig {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .requestMatchers("/**", "/api/**").permitAll()
+                .requestMatchers( "/api/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling().authenticationEntryPoint(authEntryPoint);
@@ -65,9 +65,9 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .requestMatchers("/swagger-ui/**",
-                        "/swagger-ui.html", "/api-docs/**",
-                        "/v3/api-docs/**",
-                        "/v3/api-docs.yaml");
+                .requestMatchers("/docs/swagger-ui/**",
+//                        "/swagger-ui.html",
+                        "/docs/**"
+                );
     }
 }
