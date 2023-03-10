@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "news")
@@ -35,6 +36,6 @@ public class News extends AbstractEntity {
     private String textEN;
 
     @OneToMany(mappedBy = "news")
-    private List<Document> documents;
+    private List<Document> documents=new ArrayList<>();
 
 }

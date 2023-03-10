@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import uz.edu.ai.constants.ResponseMessage;
 import uz.edu.ai.domain.News;
 import uz.edu.ai.model.Result;
@@ -37,6 +38,7 @@ public class NewsService {
             newsRepository.save(news);
             return new Result(ResponseMessage.SUCCESSFULLY_SAVED.getMessage(), true, news.getId());
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new Result(ResponseMessage.ERROR_SAVED.getMessage(), false);
         }
     }

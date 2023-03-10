@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import uz.edu.ai.api.one_id_api.OneIdResponseToken;
 import uz.edu.ai.api.one_id_api.OneIdResponseUserInfo;
 import uz.edu.ai.api.one_id_api.OneIdServiceApi;
@@ -71,6 +72,7 @@ public class UserService {
             }
             return new Result(ResponseMessage.NOT_FOUND.getMessage(), false);
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new Result(ResponseMessage.NOT_FOUND.getMessage(), false);
         }
     }
