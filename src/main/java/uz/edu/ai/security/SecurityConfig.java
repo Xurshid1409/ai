@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,7 +32,7 @@ public class SecurityConfig {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .requestMatchers( "/api/**", "/swagger-ui/**", "/api-docs/**").permitAll()
+                .requestMatchers("/**", "/api/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling().authenticationEntryPoint(authEntryPoint);
@@ -59,5 +60,14 @@ public class SecurityConfig {
                         .allowedMethods("*");
             }
         };
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/swagger-ui/**",
+                        "/swagger-ui.html", "/api-docs/**",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs.yaml");
     }
 }

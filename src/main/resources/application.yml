@@ -7,11 +7,6 @@ server:
     key-store-type: PKCS12
     key-password: changeit
     key-store-password: changeit
-  servlet:
-    context-path: /
-#  forward-headers-strategy: native
-#  tomcat:
-#    redirect-context-root: false
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ai
@@ -36,9 +31,9 @@ spring:
             mode: ENABLE_SELECTIVE
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html
+    path: /docs/swagger-ui.html
   api-docs:
-    path: /api-docs
+    path: /docs
 file:
   storage:
     location: /home/software/ai/fileStorage/
