@@ -68,8 +68,9 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> createDocument(@RequestParam("files") List<MultipartFile> files,
-                                            @RequestParam("newsId") Integer newsId) {
-        Result offer = documentService.upload(files, newsId);
+                                            @RequestParam(value = "newsId", required = false) Integer newsId,
+                                            @RequestParam(value = "memberId", required = false) Integer memberId) {
+        Result offer = documentService.upload(files, newsId, memberId);
         return ResponseEntity.status(offer.getStatus() ? 200 : 400).body(offer);
     }
 

@@ -13,11 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uz.edu.ai.constants.ResponseMessage;
 import uz.edu.ai.domain.Document;
+import uz.edu.ai.domain.Member;
 import uz.edu.ai.domain.News;
 import uz.edu.ai.model.Result;
 import uz.edu.ai.repository.DocumentRepository;
+import uz.edu.ai.repository.MemberRepository;
 import uz.edu.ai.repository.NewsRepository;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -26,6 +27,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -35,11 +37,25 @@ public class DocumentService {
     @Value("${file.storage.location}")
     private Path location;
     private final NewsRepository newsRepository;
+    private final MemberRepository memberRepository;
     private final DocumentRepository documentRepository;
 
     @Transactional
-    public Result upload(List<MultipartFile> files, Integer newsId) {
-        News news = newsRepository.findById(newsId).get();
+    public Result upload(List<MultipartFile> files, Integer newsId, Integer memberId) {
+
+        News news;
+        Member member;
+        if (newsId != null) {
+            news = newsRepository.findById(newsId).get();
+        } else {
+            news = null;
+        }
+        if (memberId != null) {
+            member = memberRepository.findById(memberId).get();
+        } else {
+            member = null;
+        }
+
         List<Document> documents = new ArrayList<>();
         try {
             files.forEach(file -> {
@@ -51,7 +67,12 @@ public class DocumentService {
                     Files.copy(file.getInputStream(), this.location.resolve(Objects.requireNonNull(fullFileName)), StandardCopyOption.REPLACE_EXISTING);
                     String currentUrl = getCurrentUrl(fullFileName);
                     Document document = new Document();
-                    document.setNews(news);
+                    if (news != null) {
+                        document.setNews(news);
+                    }
+                    if (member != null) {
+                        document.setNews(news);
+                    }
                     document.setFileUrl(currentUrl);
                     document.setFileName(fullFileName);
                     documents.add(document);
