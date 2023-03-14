@@ -17,11 +17,14 @@ import uz.edu.ai.model.request.NewsRequest;
 import uz.edu.ai.model.request.OfferRequest;
 import uz.edu.ai.model.response.DocumentResponse;
 import uz.edu.ai.model.response.NewsResponse;
+import uz.edu.ai.model.response.OfferProjection;
 import uz.edu.ai.model.response.OfferResponse;
 import uz.edu.ai.repository.NewsRepository;
 import uz.edu.ai.repository.OfferRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -72,5 +75,21 @@ public class OfferService {
         Optional<Offer> offer = offerRepository.findById(offerId);
         return Optional.of(new OfferResponse(offer.get()));
     }
+
+    @Transactional(readOnly = true)
+    public Map<String, Integer> statisticsByStatus() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Yangi", 0);
+        map.put("Javob berildi", 0);
+        map.put("Jami", 0);
+        List<OfferProjection> offerProjections = offerRepository.countOfferByStatus();
+        offerProjections.forEach(offerProjection -> {
+            map.put(offerProjection.getStatus(), offerProjection.getCount());
+        });
+        int sum = map.values().stream().mapToInt(d -> d).sum();
+        map.put("Jami", sum);
+        return map;
+    }
+
 
 }

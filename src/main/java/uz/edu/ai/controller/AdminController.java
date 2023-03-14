@@ -98,6 +98,13 @@ public class AdminController {
         return ResponseEntity.ok(offerService.getOfferById(offerId));
     }
 
+    @GetMapping("offers/statisticsByStatus")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> statisticsByStatus() {
+        return ResponseEntity.ok(offerService.statisticsByStatus());
+    }
+
     @GetMapping("/download/{fileName}")
     public ResponseEntity<?> downloadDiploma(@PathVariable String fileName) {
         String contentType;
