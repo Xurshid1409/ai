@@ -16,6 +16,7 @@ import uz.edu.ai.model.Result;
 import uz.edu.ai.model.request.NewsRequest;
 import uz.edu.ai.service.DocumentService;
 import uz.edu.ai.service.NewsService;
+import uz.edu.ai.service.OfferService;
 import java.util.List;
 
 @RestController
@@ -26,6 +27,7 @@ public class AdminController {
 
     private final DocumentService documentService;
     private final NewsService newsService;
+    private final OfferService offerService;
 
     @PostMapping("createNews")
     @PreAuthorize("hasRole('ADMIN')")
@@ -69,6 +71,31 @@ public class AdminController {
                                             @RequestParam("newsId") Integer newsId) {
         Result offer = documentService.upload(files, newsId);
         return ResponseEntity.status(offer.getStatus() ? 200 : 400).body(offer);
+    }
+
+    @PatchMapping("sendAnswer")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> sendAnswer(@RequestParam(value = "offerId") Integer offerId,
+                                          @RequestParam(value = "answer") String answer) {
+        Result result = offerService.sendAnswer(offerId, answer);
+        return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
+    }
+
+    @GetMapping("offers")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> getOffers(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                       @RequestParam(value = "size", defaultValue = "20") Integer size,
+                                       @RequestParam(value = "status") String status) {
+        return ResponseEntity.ok(offerService.getOffers(page, size, status));
+    }
+
+    @GetMapping("offers/{offerId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> getOfferById(@PathVariable Integer offerId) {
+        return ResponseEntity.ok(offerService.getOfferById(offerId));
     }
 
     @GetMapping("/download/{fileName}")
