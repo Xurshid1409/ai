@@ -26,7 +26,6 @@ public class OneIdResponseUserInfo {
     @JsonProperty("sur_name")
     private String surName;
     private String valid;
-
     @JsonProperty("_pport_issue_date")
     private String pportIssueDate;
     @JsonProperty("mob_phone_no")
