@@ -50,6 +50,7 @@ public class OfferService {
         try {
             Offer offer = offerRepository.findById(offerId).get();
             offer.setAnswer(text);
+            offer.setStatus("Javob berildi");
             offerRepository.save(offer);
             emailService.sendEmail(offer.getEmail(), text);
             return new Result(ResponseMessage.SUCCESSFULLY.getMessage(), true);
