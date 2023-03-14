@@ -39,7 +39,7 @@ public class OfferService {
             offer.setText(request.getText());
             offer.setFullName(request.getFullName());
             offerRepository.save(offer);
-            return new Result(ResponseMessage.SUCCESSFULLY_SAVED.getMessage(), true, news.getId());
+            return new Result(ResponseMessage.SUCCESSFULLY_SAVED.getMessage(), true);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new Result(ResponseMessage.ERROR_SAVED.getMessage(), false);
