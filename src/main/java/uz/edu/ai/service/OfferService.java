@@ -9,17 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import uz.edu.ai.constants.ResponseMessage;
-import uz.edu.ai.domain.News;
 import uz.edu.ai.domain.Offer;
-import uz.edu.ai.model.EmailDetails;
 import uz.edu.ai.model.Result;
-import uz.edu.ai.model.request.NewsRequest;
 import uz.edu.ai.model.request.OfferRequest;
-import uz.edu.ai.model.response.DocumentResponse;
-import uz.edu.ai.model.response.NewsResponse;
 import uz.edu.ai.model.response.OfferProjection;
 import uz.edu.ai.model.response.OfferResponse;
-import uz.edu.ai.repository.NewsRepository;
 import uz.edu.ai.repository.OfferRepository;
 
 import java.util.HashMap;

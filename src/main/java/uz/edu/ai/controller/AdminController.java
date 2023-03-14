@@ -50,7 +50,7 @@ public class AdminController {
         return ResponseEntity.ok(newsService.getNewsById(newsId));
     }
 
-    @GetMapping
+    @GetMapping("news")
     public ResponseEntity<?> getNews(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                      @RequestParam(value = "size", defaultValue = "20") Integer size) {
         return ResponseEntity.ok(newsService.getNews(page, size));
@@ -99,8 +99,8 @@ public class AdminController {
     }
 
     @GetMapping("offers/statisticsByStatus")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> statisticsByStatus() {
         return ResponseEntity.ok(offerService.statisticsByStatus());
     }

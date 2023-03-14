@@ -1,16 +1,10 @@
 package uz.edu.ai.service;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import uz.edu.ai.model.EmailDetails;
-import java.io.File;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -18,15 +12,15 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
 
-//    @Value("${spring.mail.username}")
-//    private String sender;
+    @Value("${spring.mail.username}")
+    private String sender;
 
     public void sendEmail(String to, String text) {
         try {
             // Creating a simple mail message
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             // Setting up necessary details
-            mailMessage.setFrom("hersh1409@gmail.com");
+            mailMessage.setFrom(sender);
             mailMessage.setTo(to);
             mailMessage.setText(text);
             mailMessage.setSubject("Murojaatga javob");
