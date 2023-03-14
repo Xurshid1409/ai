@@ -52,6 +52,8 @@ public class NewsService {
             news.setTextUZ(request.getTextUZ());
             news.setTextRU(request.getTextRU());
             news.setTextEN(request.getTextEN());
+            news.getDocuments().forEach(document -> documentService.deleteFile(document.getFileName()));
+            documentService.deleteDocuments(news.getDocuments());
             newsRepository.save(news);
             return new Result(ResponseMessage.SUCCESSFULLY_UPDATE.getMessage(), true);
         } catch (Exception e) {
