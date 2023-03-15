@@ -84,15 +84,11 @@ public class AdminController {
     }
 
     @GetMapping("members")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> getMembers() {
         return ResponseEntity.ok(memberService.getMembers());
     }
 
     @GetMapping("{memberId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> getMemberById(@PathVariable Integer memberId) {
         return ResponseEntity.ok(memberService.getMemberById(memberId));
     }
