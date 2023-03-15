@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uz.edu.ai.constants.ResponseMessage;
 import uz.edu.ai.model.Result;
+import uz.edu.ai.model.request.MemberRequest;
 import uz.edu.ai.model.request.NewsRequest;
 import uz.edu.ai.service.DocumentService;
+import uz.edu.ai.service.MemberService;
 import uz.edu.ai.service.NewsService;
 import uz.edu.ai.service.OfferService;
 import java.util.List;
@@ -28,6 +30,7 @@ public class AdminController {
     private final DocumentService documentService;
     private final NewsService newsService;
     private final OfferService offerService;
+    private final MemberService memberService;
 
     @PostMapping("createNews")
     @PreAuthorize("hasRole('ADMIN')")
@@ -37,7 +40,7 @@ public class AdminController {
         return ResponseEntity.status(result.getStatus() ? 201 : 400).body(result);
     }
 
-    @PostMapping("updateNews/{newsId}")
+    @PutMapping("updateNews/{newsId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> updateNews(@PathVariable Integer newsId, @RequestBody NewsRequest request) {
@@ -62,6 +65,36 @@ public class AdminController {
     public ResponseEntity<?> deleteNews(@PathVariable Integer newsId) {
         Result result = newsService.deleteNews(newsId);
         return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
+    }
+
+    @PostMapping("createMember")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> createMember(@RequestBody MemberRequest request) {
+        Result result = memberService.createMember(request);
+        return ResponseEntity.status(result.getStatus() ? 201 : 400).body(result);
+    }
+
+    @PutMapping("updateMember/{memberId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> updateMember(@PathVariable Integer memberId, @RequestBody MemberRequest request) {
+        Result result = memberService.updateMember(memberId, request);
+        return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
+    }
+
+    @GetMapping("members")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> getMembers() {
+        return ResponseEntity.ok(memberService.getMembers());
+    }
+
+    @GetMapping("{memberId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> getMemberById(@PathVariable Integer memberId) {
+        return ResponseEntity.ok(memberService.getMemberById(memberId));
     }
 
     @PostMapping(value = "createDocument", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

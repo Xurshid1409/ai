@@ -58,7 +58,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberResponse> getMembers(int page, int size) {
+    public List<MemberResponse> getMembers() {
         return memberRepository.findAll().stream().map(e ->
                 new MemberResponse(e, e.getDocuments().stream().map(DocumentResponse::new).toList())).toList();
     }
