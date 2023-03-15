@@ -48,7 +48,7 @@ public class AdminController {
         return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
     }
 
-    @GetMapping("{newsId}")
+    @GetMapping("news/{newsId}")
     public ResponseEntity<?> getNewsById(@PathVariable Integer newsId) {
         return ResponseEntity.ok(newsService.getNewsById(newsId));
     }
@@ -59,7 +59,7 @@ public class AdminController {
         return ResponseEntity.ok(newsService.getNews(page, size));
     }
 
-    @DeleteMapping("{newsId}")
+    @DeleteMapping("news/{newsId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> deleteNews(@PathVariable Integer newsId) {
@@ -88,7 +88,7 @@ public class AdminController {
         return ResponseEntity.ok(memberService.getMembers());
     }
 
-    @GetMapping("{memberId}")
+    @GetMapping("members/{memberId}")
     public ResponseEntity<?> getMemberById(@PathVariable Integer memberId) {
         return ResponseEntity.ok(memberService.getMemberById(memberId));
     }
