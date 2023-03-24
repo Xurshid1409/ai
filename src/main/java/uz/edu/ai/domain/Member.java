@@ -12,7 +12,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "news")
+@Table(name = "member")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,9 +20,15 @@ import java.util.List;
 @Entity
 public class Member extends AbstractEntity {
     private String fullName;
+    private String fullNameRU;
+    private String fullNameEN;
 
     @Column(length = 4096)
     private String workPlace;
+    @Column(length = 4096)
+    private String workPlaceRU;
+    @Column(length = 4096)
+    private String workPlaceEN;
 
     @OneToMany(mappedBy = "members")
     private List<Document> documents=new ArrayList<>();

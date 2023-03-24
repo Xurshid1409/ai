@@ -16,6 +16,7 @@ import uz.edu.ai.model.response.OfferProjection;
 import uz.edu.ai.model.response.OfferResponse;
 import uz.edu.ai.repository.OfferRepository;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,7 @@ public class OfferService {
             Offer offer = offerRepository.findById(offerId).get();
             offer.setAnswer(text);
             offer.setStatus("Javob berildi");
+            offer.setModifiedDate(LocalDateTime.now());
             offerRepository.save(offer);
             emailService.sendEmail(offer.getEmail(), text);
             return new Result(ResponseMessage.SUCCESSFULLY.getMessage(), true);

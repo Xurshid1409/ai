@@ -15,6 +15,8 @@ import uz.edu.ai.model.request.NewsRequest;
 import uz.edu.ai.model.response.DocumentResponse;
 import uz.edu.ai.model.response.NewsResponse;
 import uz.edu.ai.repository.NewsRepository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +37,7 @@ public class NewsService {
             news.setTextUZ(request.getTextUZ());
             news.setTextRU(request.getTextRU());
             news.setTextEN(request.getTextEN());
+            news.setNews_date(request.getNewsDate());
             newsRepository.save(news);
             return new Result(ResponseMessage.SUCCESSFULLY_SAVED.getMessage(), true, news.getId());
         } catch (Exception e) {
@@ -52,11 +55,14 @@ public class NewsService {
             news.setTextUZ(request.getTextUZ());
             news.setTextRU(request.getTextRU());
             news.setTextEN(request.getTextEN());
+            news.setNews_date(request.getNewsDate());
+            news.setModifiedDate(LocalDateTime.now());
             news.getDocuments().forEach(document -> documentService.deleteFile(document.getFileName()));
             documentService.deleteDocuments(news.getDocuments());
             newsRepository.save(news);
             return new Result(ResponseMessage.SUCCESSFULLY_UPDATE.getMessage(), true);
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new Result(ResponseMessage.ERROR_UPDATE.getMessage(), false);
         }
     }
@@ -71,9 +77,30 @@ public class NewsService {
     @Transactional(readOnly = true)
     public Page<NewsResponse> getNews(int page, int size) {
         if (page > 0) page = page - 1;
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
-        return newsRepository.findAll(pageable).map(e ->
+        Pageable pageable = PageRequest.of(page, size);
+        return newsRepository.findAllNews(pageable).map(e ->
                 new NewsResponse(e, e.getDocuments().stream().map(DocumentResponse::new).toList()));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<NewsResponse> getNewsPublic(int page, int size) {
+        if (page > 0) page = page - 1;
+        Pageable pageable = PageRequest.of(page, size);
+        return newsRepository.findAllPublicNews(pageable).map(e ->
+                new NewsResponse(e, e.getDocuments().stream().map(DocumentResponse::new).toList()));
+    }
+
+    @Transactional
+    public Result setNewsIsPublic(Integer newsId, Boolean isPublic) {
+        try {
+            News news = newsRepository.findById(newsId).get();
+            news.setIsPublic(isPublic);
+            newsRepository.save(news);
+            return new Result(ResponseMessage.SUCCESSFULLY.getMessage(), true);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return new Result(ResponseMessage.ERROR.getMessage(), false);
+        }
     }
 
     @Transactional
@@ -87,6 +114,7 @@ public class NewsService {
             newsRepository.delete(news);
             return new Result(ResponseMessage.SUCCESSFULLY_DELETED.getMessage(), true);
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new Result(ResponseMessage.ERROR_DELETED.getMessage(), false);
         }
     }

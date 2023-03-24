@@ -11,8 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberRequest {
-
     private String fullName;
+    private String fullNameRU;
+    private String fullNameEN;
     private String workPlace;
+    private String workPlaceRU;
+    private String workPlaceEN;
 
 }

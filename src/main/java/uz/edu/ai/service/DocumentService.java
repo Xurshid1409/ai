@@ -13,8 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uz.edu.ai.constants.ResponseMessage;
 import uz.edu.ai.domain.Document;
-import uz.edu.ai.domain.Member;
-import uz.edu.ai.domain.News;
 import uz.edu.ai.model.Result;
 import uz.edu.ai.repository.DocumentRepository;
 import uz.edu.ai.repository.MemberRepository;
@@ -27,7 +25,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -41,21 +38,9 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
 
     @Transactional
-    public Result upload(List<MultipartFile> files, Integer newsId, Integer memberId) {
+    public Result upload(List<MultipartFile> files, Integer newsId) {
 
-        News news;
-        Member member;
-        if (newsId != null) {
-            news = newsRepository.findById(newsId).get();
-        } else {
-            news = null;
-        }
-        if (memberId != null) {
-            member = memberRepository.findById(memberId).get();
-        } else {
-            member = null;
-        }
-
+        var news = newsRepository.findById(newsId).get();
         List<Document> documents = new ArrayList<>();
         try {
             files.forEach(file -> {
@@ -67,12 +52,7 @@ public class DocumentService {
                     Files.copy(file.getInputStream(), this.location.resolve(Objects.requireNonNull(fullFileName)), StandardCopyOption.REPLACE_EXISTING);
                     String currentUrl = getCurrentUrl(fullFileName);
                     Document document = new Document();
-                    if (news != null) {
-                        document.setNews(news);
-                    }
-                    if (member != null) {
-                        document.setNews(news);
-                    }
+                    document.setNews(news);
                     document.setFileUrl(currentUrl);
                     document.setFileName(fullFileName);
                     documents.add(document);
@@ -86,6 +66,38 @@ public class DocumentService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new Result(ResponseMessage.ERROR.getMessage(), false);
         }
+    }
+
+    @Transactional
+    public Result uploadPhoto(List<MultipartFile> files, Integer memberId) {
+
+        var member = memberRepository.findById(memberId).get();
+        List<Document> documents = new ArrayList<>();
+//        try {
+        files.forEach(file -> {
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+            Integer name = ThreadLocalRandom.current().nextInt(99999999, 1000000000);
+            String s = FilenameUtils.getExtension(fileName);
+            String fullFileName = name + "." + s;
+            try {
+                Files.copy(file.getInputStream(), this.location.resolve(Objects.requireNonNull(fullFileName)), StandardCopyOption.REPLACE_EXISTING);
+                String currentUrl = getCurrentUrl(fullFileName);
+                Document document = new Document();
+                document.setMembers(member);
+                document.setFileUrl(currentUrl);
+                document.setFileName(fullFileName);
+                documents.add(document);
+            } catch (Exception e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+            }
+        });
+        documentRepository.saveAll(documents);
+        return new Result(ResponseMessage.SUCCESSFULLY.getMessage(), true);
+//        } catch (Exception e) {
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//            return new Result(ResponseMessage.ERROR.getMessage(), false);
+//        }
     }
 
     public Resource download(String filename) {

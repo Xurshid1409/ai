@@ -59,6 +59,20 @@ public class AdminController {
         return ResponseEntity.ok(newsService.getNews(page, size));
     }
 
+    @GetMapping("publicNews")
+    public ResponseEntity<?> getNewsIsPublic(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                             @RequestParam(value = "size", defaultValue = "20") Integer size) {
+        return ResponseEntity.ok(newsService.getNewsPublic(page, size));
+    }
+
+    @PatchMapping("setNewsIsPublic/{newsId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> setNewsIsPublic(@PathVariable Integer newsId,
+                                             @RequestParam(value = "isPublic") Boolean isPublic) {
+        return ResponseEntity.ok(newsService.setNewsIsPublic(newsId, isPublic));
+    }
+
     @DeleteMapping("news/{newsId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
@@ -93,21 +107,30 @@ public class AdminController {
         return ResponseEntity.ok(memberService.getMemberById(memberId));
     }
 
+    @DeleteMapping("members/{memberId}")
+    public ResponseEntity<?> deleteMember(@PathVariable Integer memberId) {
+        return ResponseEntity.ok(memberService.deleteMember(memberId));
+    }
+
     @PostMapping(value = "createDocument", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> createDocument(@RequestParam("files") List<MultipartFile> files,
                                             @RequestParam(value = "newsId", required = false) Integer newsId,
                                             @RequestParam(value = "memberId", required = false) Integer memberId) {
-        Result offer = documentService.upload(files, newsId, memberId);
-        return ResponseEntity.status(offer.getStatus() ? 200 : 400).body(offer);
+        if (newsId != null) {
+            Result result = documentService.upload(files, newsId);
+            return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
+        }
+        Result result = documentService.uploadPhoto(files, memberId);
+        return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
     }
 
     @PatchMapping("sendAnswer")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> sendAnswer(@RequestParam(value = "offerId") Integer offerId,
-                                          @RequestParam(value = "answer") String answer) {
+                                        @RequestParam(value = "answer") String answer) {
         Result result = offerService.sendAnswer(offerId, answer);
         return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
     }

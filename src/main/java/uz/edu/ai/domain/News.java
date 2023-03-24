@@ -19,21 +19,18 @@ public class News extends AbstractEntity {
 
     @Column(length = 2048)
     private String titleUZ;
-
     @Column(length = 2048)
     private String titleRU;
-
     @Column(length = 2048)
     private String titleEN;
-
     @Column(length = 8192)
     private String textUZ;
-
     @Column(length = 8192)
     private String textRU;
-
     @Column(length = 8192)
     private String textEN;
+    private String news_date;
+    private Boolean isPublic = Boolean.FALSE;
 
     @OneToMany(mappedBy = "news")
     private List<Document> documents=new ArrayList<>();

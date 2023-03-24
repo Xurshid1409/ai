@@ -22,18 +22,8 @@ public class NewsResponse {
     private String textRU;
     private String textEN;
     private String createdDate;
+    private Boolean isPublic;
     List<DocumentResponse> documentResponses = new ArrayList<>();
-
-    public NewsResponse(News news) {
-        this.id = news.getId();
-        this.titleUZ = news.getTitleUZ();
-        this.titleRU = news.getTitleRU();
-        this.titleEN = news.getTitleEN();
-        this.textUZ = news.getTextUZ();
-        this.textRU = news.getTextRU();
-        this.textEN = news.getTextEN();
-        this.createdDate = news.getCreatedDate().toString();
-    }
     public NewsResponse(News news, List<DocumentResponse> documentResponses) {
         this.id = news.getId();
         this.titleUZ = news.getTitleUZ();
@@ -42,7 +32,8 @@ public class NewsResponse {
         this.textUZ = news.getTextUZ();
         this.textRU = news.getTextRU();
         this.textEN = news.getTextEN();
-        this.createdDate = news.getCreatedDate().toString();
+        this.createdDate = news.getNews_date();
+        this.isPublic = news.getIsPublic();
         this.documentResponses = documentResponses;
     }
 }
