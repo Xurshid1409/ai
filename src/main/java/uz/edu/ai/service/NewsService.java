@@ -35,6 +35,9 @@ public class NewsService {
             news.setTitleUZ(request.getTitleUZ());
             news.setTitleRU(request.getTitleRU());
             news.setTitleEN(request.getTitleEN());
+            news.setAnonsUZ(request.getAnonsUZ());
+            news.setAnonsRU(request.getAnonsRU());
+            news.setAnonsEN(request.getAnonsEN());
             news.setTextUZ(request.getTextUZ());
             news.setTextRU(request.getTextRU());
             news.setTextEN(request.getTextEN());
@@ -53,6 +56,9 @@ public class NewsService {
             news.setTitleUZ(request.getTitleUZ());
             news.setTitleRU(request.getTitleRU());
             news.setTitleEN(request.getTitleEN());
+            news.setAnonsUZ(request.getAnonsUZ());
+            news.setAnonsRU(request.getAnonsRU());
+            news.setAnonsEN(request.getAnonsEN());
             news.setTextUZ(request.getTextUZ());
             news.setTextRU(request.getTextRU());
             news.setTextEN(request.getTextEN());

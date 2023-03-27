@@ -23,6 +23,12 @@ public class News extends AbstractEntity {
     private String titleRU;
     @Column(length = 2048)
     private String titleEN;
+    @Column(length = 2048)
+    private String anonsUZ;
+    @Column(length = 2048)
+    private String anonsRU;
+    @Column(length = 2048)
+    private String anonsEN;
     @Column(length = 8192)
     private String textUZ;
     @Column(length = 8192)
