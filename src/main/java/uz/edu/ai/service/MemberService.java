@@ -14,6 +14,7 @@ import uz.edu.ai.model.response.MemberResponse;
 import uz.edu.ai.repository.MemberRepository;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +73,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<MemberResponse> getMembers() {
-        return memberRepository.findAll().stream().map(e ->
+        return memberRepository.findAll().stream().sorted(Comparator.comparing(Member::getId)).map(e ->
                 new MemberResponse(e, e.getDocuments().stream().map(DocumentResponse::new).toList())).toList();
     }
 
