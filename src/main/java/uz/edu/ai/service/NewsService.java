@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
 import uz.edu.ai.constants.ResponseMessage;
 import uz.edu.ai.domain.News;
 import uz.edu.ai.model.Result;

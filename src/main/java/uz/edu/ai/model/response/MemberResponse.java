@@ -29,7 +29,7 @@ public class MemberResponse {
         this.fullNameEN = member.getFullNameEN();
         this.workPlace = member.getWorkPlace();
         this.workPlaceRU = member.getWorkPlaceRU();
-        this.workPlaceEN = member.getFullNameEN();
+        this.workPlaceEN = member.getWorkPlaceEN();
         this.documentResponses = documentResponses;
     }
 }

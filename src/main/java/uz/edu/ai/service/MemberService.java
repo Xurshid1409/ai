@@ -29,9 +29,8 @@ public class MemberService {
         try {
             Member member = new Member();
             member.setFullName(request.getFullName());
-            member.setFullNameRU(request.getWorkPlaceRU());
+            member.setFullNameRU(request.getFullNameRU());
             member.setFullNameEN(request.getFullNameEN());
-            member.setWorkPlace(request.getWorkPlace());
             member.setWorkPlaceRU(request.getWorkPlaceRU());
             member.setWorkPlaceEN(request.getWorkPlaceEN());
             member.setWorkPlace(request.getWorkPlace());
@@ -47,12 +46,11 @@ public class MemberService {
         try {
             Member member = memberRepository.findById(memberId).get();
             member.setFullName(request.getFullName());
-            member.setFullNameRU(request.getWorkPlaceRU());
+            member.setFullNameRU(request.getFullNameRU());
             member.setFullNameEN(request.getFullNameEN());
             member.setWorkPlace(request.getWorkPlace());
             member.setWorkPlaceRU(request.getWorkPlaceRU());
             member.setWorkPlaceEN(request.getWorkPlaceEN());
-            member.setWorkPlace(request.getWorkPlace());
             member.setModifiedDate(LocalDateTime.now());
             memberRepository.save(member);
             member.getDocuments().forEach(document -> documentService.deleteFile(document.getFileName()));
