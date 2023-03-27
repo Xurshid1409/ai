@@ -72,6 +72,17 @@ public class OfferService {
         return Optional.of(new OfferResponse(offer.get()));
     }
 
+    @Transactional
+    public Result deleteOffer(Integer offerId) {
+        try {
+            offerRepository.deleteById(offerId);
+            return new Result(ResponseMessage.SUCCESSFULLY_DELETED.getMessage(), true);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return new Result(ResponseMessage.ERROR_DELETED.getMessage(), false);
+        }
+    }
+
     @Transactional(readOnly = true)
     public Map<String, Integer> statisticsByStatus() {
         Map<String, Integer> map = new HashMap<>();

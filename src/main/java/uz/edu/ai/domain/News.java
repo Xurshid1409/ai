@@ -36,6 +36,9 @@ public class News extends AbstractEntity {
     @Column(length = 8192)
     private String textEN;
     private String news_date;
+
+    @Column(length = 2048)
+    private String url;
     private Boolean isPublic = Boolean.FALSE;
 
     @OneToMany(mappedBy = "news")

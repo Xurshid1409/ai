@@ -21,6 +21,7 @@ public class NewsRequest {
     private String textUZ;
     private String textRU;
     private String textEN;
+    private String url;
     private String newsDate;
 
 }

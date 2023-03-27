@@ -73,7 +73,7 @@ public class DocumentService {
 
         var member = memberRepository.findById(memberId).get();
         List<Document> documents = new ArrayList<>();
-//        try {
+        try {
         files.forEach(file -> {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
             Integer name = ThreadLocalRandom.current().nextInt(99999999, 1000000000);
@@ -94,10 +94,27 @@ public class DocumentService {
         });
         documentRepository.saveAll(documents);
         return new Result(ResponseMessage.SUCCESSFULLY.getMessage(), true);
-//        } catch (Exception e) {
-//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-//            return new Result(ResponseMessage.ERROR.getMessage(), false);
-//        }
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return new Result(ResponseMessage.ERROR.getMessage(), false);
+        }
+    }
+
+    @Transactional
+    public Result uploadImage(MultipartFile file) {
+
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+            Integer name = ThreadLocalRandom.current().nextInt(99999999, 1000000000);
+            String s = FilenameUtils.getExtension(fileName);
+            String fullFileName = name + "." + s;
+            try {
+                Files.copy(file.getInputStream(), this.location.resolve(Objects.requireNonNull(fullFileName)), StandardCopyOption.REPLACE_EXISTING);
+                String currentUrl = getCurrentUrl(fullFileName);
+                return new Result(ResponseMessage.SUCCESSFULLY.getMessage(), true, currentUrl);
+            } catch (Exception ex) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return new Result(ResponseMessage.ERROR.getMessage(), false);
+            }
     }
 
     public Resource download(String filename) {

@@ -151,6 +151,13 @@ public class AdminController {
         return ResponseEntity.ok(offerService.getOfferById(offerId));
     }
 
+    @DeleteMapping("offers/{offerId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> deleteOffer(@PathVariable Integer offerId) {
+        return ResponseEntity.ok(offerService.deleteOffer(offerId));
+    }
+
     @GetMapping("offers/statisticsByStatus")
 //    @PreAuthorize("hasRole('ADMIN')")
 //    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
