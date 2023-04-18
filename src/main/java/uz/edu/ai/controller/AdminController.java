@@ -20,6 +20,7 @@ import uz.edu.ai.service.MemberService;
 import uz.edu.ai.service.NewsService;
 import uz.edu.ai.service.OfferService;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/admin/")
@@ -171,9 +172,29 @@ public class AdminController {
         try {
             Resource resource = documentService.download(fileName);
             HttpHeaders headers = new HttpHeaders();
-            contentType = "application/octet-stream";
-            headers.add("content-disposition", "attachment; filename=" + resource.getFilename());
+          /*  contentType = "application/octet-stream";
+            headers.add("content-disposition", "inline; filename=" + resource.getFilename());
             return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).
+                    headers(headers)
+                    .body(resource);*/
+
+            MediaType contType = null;
+            headers.add("content-disposition", "inline;filename=" + resource.getFilename());
+            if (Objects.requireNonNull(resource.getFilename()).endsWith("pdf")) {
+                headers.setContentType(MediaType.parseMediaType("application/pdf"));
+                headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+                contType = MediaType.APPLICATION_PDF;
+            } else if (Objects.requireNonNull(resource.getFilename()).endsWith("jpg")){
+                contType = MediaType.IMAGE_JPEG;
+
+            }else if (Objects.requireNonNull(resource.getFilename()).endsWith("png")){
+                contType = MediaType.IMAGE_PNG;
+
+            }else if (Objects.requireNonNull(resource.getFilename()).endsWith("jpeg")){
+                contType = MediaType.IMAGE_JPEG;
+
+            }
+            return ResponseEntity.ok().contentType(contType).
                     headers(headers)
                     .body(resource);
         } catch (Exception e) {
