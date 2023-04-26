@@ -29,11 +29,11 @@ public class News extends AbstractEntity {
     private String anonsRU;
     @Column(length = 2048)
     private String anonsEN;
-    @Column(length = 8192)
+    @Column(length = 500000)
     private String textUZ;
-    @Column(length = 8192)
+    @Column(length = 500000)
     private String textRU;
-    @Column(length = 8192)
+    @Column(length = 500000)
     private String textEN;
     private String news_date;
 

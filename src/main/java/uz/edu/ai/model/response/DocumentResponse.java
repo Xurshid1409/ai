@@ -21,4 +21,9 @@ public class DocumentResponse {
         this.fileUrl = document.getFileUrl();
         this.fileName = document.getFileName();
     }
+
+    public DocumentResponse(String url, String fileName) {
+        this.fileUrl = url;
+        this.fileName = fileName;
+    }
 }

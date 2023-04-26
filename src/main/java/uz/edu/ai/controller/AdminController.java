@@ -127,6 +127,14 @@ public class AdminController {
         return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
     }
 
+    @PostMapping(value = "uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+            Result result = documentService.uploadImage(file);
+            return ResponseEntity.status(result.getStatus() ? 200 : 400).body(result);
+    }
+
     @PatchMapping("sendAnswer")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})

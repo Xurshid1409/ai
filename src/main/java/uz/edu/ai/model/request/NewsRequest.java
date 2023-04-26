@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,5 +26,6 @@ public class NewsRequest {
     private String textEN;
     private String url;
     private String newsDate;
+    private List<String> fileNames = new ArrayList<>();
 
 }

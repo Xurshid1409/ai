@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.edu.ai.domain.Offer;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,6 +20,7 @@ public class OfferResponse {
     private String fullName;
     private String text;
     private String answer;
+    private LocalDateTime createDate;
 
     public OfferResponse(Offer offer) {
 
@@ -28,5 +31,6 @@ public class OfferResponse {
         this.text = offer.getText();
         if (offer.getAnswer() != null)
         this.answer = offer.getAnswer();
+        this.createDate = offer.getCreatedDate();
     }
 }

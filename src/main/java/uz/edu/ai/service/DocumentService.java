@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uz.edu.ai.constants.ResponseMessage;
 import uz.edu.ai.domain.Document;
 import uz.edu.ai.model.Result;
+import uz.edu.ai.model.response.DocumentResponse;
 import uz.edu.ai.repository.DocumentRepository;
 import uz.edu.ai.repository.MemberRepository;
 import uz.edu.ai.repository.NewsRepository;
@@ -110,7 +111,8 @@ public class DocumentService {
             try {
                 Files.copy(file.getInputStream(), this.location.resolve(Objects.requireNonNull(fullFileName)), StandardCopyOption.REPLACE_EXISTING);
                 String currentUrl = getCurrentUrl(fullFileName);
-                return new Result(ResponseMessage.SUCCESSFULLY.getMessage(), true, currentUrl);
+                DocumentResponse documentResponse = new DocumentResponse(currentUrl, fullFileName);
+                return new Result(ResponseMessage.SUCCESSFULLY.getMessage(), true, documentResponse);
             } catch (Exception ex) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return new Result(ResponseMessage.ERROR.getMessage(), false);

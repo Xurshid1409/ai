@@ -41,6 +41,7 @@ public class NewsService {
             news.setTextUZ(request.getTextUZ());
             news.setTextRU(request.getTextRU());
             news.setTextEN(request.getTextEN());
+            news.setFileNames(request.getFileNames());
             news.setNews_date(request.getNewsDate());
             newsRepository.save(news);
             return new Result(ResponseMessage.SUCCESSFULLY_SAVED.getMessage(), true, news.getId());
@@ -65,6 +66,7 @@ public class NewsService {
             news.setNews_date(request.getNewsDate());
             news.setModifiedDate(LocalDateTime.now());
             news.getDocuments().forEach(document -> documentService.deleteFile(document.getFileName()));
+            news.getFileNames().forEach(documentService::deleteFile);
             documentService.deleteDocuments(news.getDocuments());
             newsRepository.save(news);
             return new Result(ResponseMessage.SUCCESSFULLY_UPDATE.getMessage(), true);
@@ -113,16 +115,16 @@ public class NewsService {
     @Transactional
     public Result deleteNews(Integer newsId) {
         News news = newsRepository.findById(newsId).get();
-        try {
+//        try {
             news.getDocuments().forEach(d -> {
                 documentService.deleteFile(d.getFileName());
             });
             documentService.deleteDocuments(news.getDocuments());
             newsRepository.delete(news);
             return new Result(ResponseMessage.SUCCESSFULLY_DELETED.getMessage(), true);
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return new Result(ResponseMessage.ERROR_DELETED.getMessage(), false);
-        }
+//        } catch (Exception e) {
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//            return new Result(ResponseMessage.ERROR_DELETED.getMessage(), false);
+//        }
     }
 }
